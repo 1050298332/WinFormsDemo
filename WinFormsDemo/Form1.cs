@@ -152,8 +152,30 @@ namespace WinFormsDemo
             // 隐藏窗体重新计时 定时开启
             //点击后进行验证  验证完成后隐藏并关闭摄像头
 
-            await Task.Delay(3000); //模仿验证时间
-            MessageBox.Show("识别完成");
+            //await Task.Delay(3000); //模仿验证时间
+            try
+            {
+                string url = @"http://mccsdl.top/prod-api/userInfo";  //链接API 地址
+
+                System.Net.HttpWebRequest req = null;
+                System.Net.HttpWebResponse res = null;
+
+                req = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);  //创建HTTP 请求
+
+                res = (System.Net.HttpWebResponse)req.GetResponse();   //获取请求返回的响应
+
+
+                System.IO.StreamReader read = new System.IO.StreamReader(res.GetResponseStream()); //读取来自API 接口的响应中的内容，也就是它的体
+
+
+                MessageBox.Show(read.ReadToEnd().ToString()); //输出StreamReader 中所有的流
+
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
             this.Visible = false;
             ShutCamera();//释放摄像头
             t.Start(); //执行完毕后再开启器
