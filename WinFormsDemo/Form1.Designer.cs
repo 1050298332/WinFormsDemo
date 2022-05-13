@@ -121,7 +121,7 @@
             // 
             // videoSourcePlayer1
             // 
-            this.videoSourcePlayer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.videoSourcePlayer1.BackColor = System.Drawing.Color.Black;
             this.videoSourcePlayer1.Location = new System.Drawing.Point(26, 103);
             this.videoSourcePlayer1.Name = "videoSourcePlayer1";
             this.videoSourcePlayer1.Size = new System.Drawing.Size(779, 484);

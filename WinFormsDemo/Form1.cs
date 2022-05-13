@@ -11,7 +11,8 @@ namespace WinFormsDemo
         VideoCaptureDevice videoSource;//捕获设备源
                                        //Bitmap img;//处理图片
 
-        System.Timers.Timer t = new System.Timers.Timer(1800000);//实例化Timer类，设置间隔时间为10000毫秒；
+        System.Timers.Timer t = new System.Timers.Timer(10000);//实例化Timer类，设置间隔时间为10000毫秒；
+
         //30分钟为1800000毫秒
         public Form1()
         {
@@ -22,8 +23,9 @@ namespace WinFormsDemo
             t.Enabled = true;//是否执行System.Timers.Timer.Elapsed事件；
             t.Stop(); //先关闭定时器
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
+
             form1 = this;//再把主窗体赋值给form1
-            System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;//设置该属性 为false
             //最大化窗体
             //this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
         }
@@ -31,6 +33,7 @@ namespace WinFormsDemo
         {
             t.Stop(); //先关闭定时器
                       // 正常显示窗体
+
             this.Visible = true;
             ShutCamera();//释放摄像头
             if (uiComboBox1.Text == "摄像头1" && videoDevices.Count > 0)
@@ -42,8 +45,13 @@ namespace WinFormsDemo
                 MessageBox.Show("选择的摄像头不存在！！！");
                 return;
             }
-            videoSourcePlayer1.VideoSource = videoSource;
-            videoSourcePlayer1.Start();
+
+            this.BeginInvoke(new Action(delegate ()
+            {
+                videoSourcePlayer1.VideoSource = videoSource;
+                videoSourcePlayer1.Start();
+            }));
+
 
             Button1.Enabled = true;//开启“识别功能”
         }
@@ -146,16 +154,17 @@ namespace WinFormsDemo
 
         private async void Button1_Click(object sender, EventArgs e)
         {
-            //img = videoSourcePlayer1.GetCurrentVideoFrame();//拍摄
+            //img = videoSourcePlayer1.GetCurrentVideoFrame();//拍摄   图片存储
             //pictureBox1.Image = img;
+
             //Button2.Enabled = true;//开启“保存”功能
             // 隐藏窗体重新计时 定时开启
-            //点击后进行验证  验证完成后隐藏并关闭摄像头
+            //点击后进行验证  验证完成后隐藏界面并关闭摄像头
 
             //await Task.Delay(3000); //模仿验证时间
             try
             {
-                string url = @"http://mccsdl.top/prod-api/userInfo";  //链接API 地址
+                string url = @"http://localhost:8100/demoApi/test/1";  //链接API 地址
 
                 System.Net.HttpWebRequest req = null;
                 System.Net.HttpWebResponse res = null;
@@ -284,5 +293,11 @@ namespace WinFormsDemo
             }
         }
 
+
+    
     }
+
 }
+
+
+
